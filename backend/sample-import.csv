@@ -1,0 +1,6 @@
+make,model,trim,year,price,km,fuel,transmission,drivetrain,body_type,condition,hp,cc,color,status,features,image1,image2
+Volkswagen,Golf,1.5 TSI Style,2023,22990,15000,gasoline,automatic,FWD,Hatchback,used,150,1498,White,available,"Klima, Navigacija, LED, Park Assist",https://images.unsplash.com/photo-1606611013016-969c19ba27d5?w=800,https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800
+Audi,A4,2.0 TDI S-Line,2021,29500,62000,diesel,automatic,AWD,Sedan,used,190,1968,Gray,available,"S-Line, Matrix LED, Virtual Cockpit",https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800,
+Skoda,Octavia,2.0 TDI Elegance,2022,24990,38000,diesel,manual,FWD,Wagon,used,150,1968,Blue,available,"Panorama, Navigacija, Grejanje sedista",,
+Mercedes,C200,AMG Line,2020,32000,55000,gasoline,automatic,RWD,Sedan,used,204,1991,Black,available,"AMG, Burmester, Ambijentalno osvetljenje",,
+Toyota,Corolla,1.8 Hybrid,2023,26990,8000,hybrid,automatic,FWD,Hatchback,used,122,1798,Red,available,"Hybrid, Toyota Safety Sense, Kamera",,
