@@ -1581,8 +1581,40 @@ function DealerStorefront({ dealer, cars, onBack, isPublic }) {
     setChatLoading(true);
     const webhookUrl = dealer.chatWebhook;
     
+    // ── Try AI chat via backend (Groq) ──
+    if (!webhookUrl) {
+      try {
+        const payload = {
+          dealerName: dealer.name,
+          language: lang,
+          message: userMessage,
+          selectedCar: selectedCar ? { make: selectedCar.make, model: selectedCar.model, price: selectedCar.price } : null,
+          inventory: buildInventoryContext(),
+          chatHistory: chatMessages.slice(-10).map(m => ({ role: m.role, text: m.text })),
+        };
+
+        const resp = await fetch(`${API_URL}/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.text) {
+            setChatMessages(prev => [...prev, { role: "assistant", text: data.text, time: new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}) }]);
+            setChatLoading(false);
+            return;
+          }
+        }
+        // If API fails, fall through to local fallback
+      } catch (err) {
+        console.warn("AI chat failed, using local fallback:", err.message);
+      }
+    }
+
     if (webhookUrl) {
-      // ── Real webhook call ──
+      // ── Custom webhook call ──
       try {
         const payload = {
           sessionId: chatSessionId,
@@ -1604,13 +1636,11 @@ function DealerStorefront({ dealer, cars, onBack, isPublic }) {
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
 
-        // Handle response — support multiple formats
         const aiText = data.text || data.message || data.response || data.output || 
                        (typeof data === "string" ? data : JSON.stringify(data));
 
         setChatMessages(prev => [...prev, { role: "assistant", text: aiText, time: new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}) }]);
 
-        // If response includes car recommendations (IDs)
         if (data.carIds && Array.isArray(data.carIds)) {
           const recommended = data.carIds.map(id => dealerCars.find(c => c.id === id)).filter(Boolean);
           if (recommended.length > 0) {
@@ -1618,7 +1648,6 @@ function DealerStorefront({ dealer, cars, onBack, isPublic }) {
             if (recommended.length > 1) setCompareCar(recommended[1]);
           }
         }
-        // If response includes action
         if (data.action === "showSpecs" && selectedCar) setShowSpecs(true);
         if (data.action === "bookTestDrive" && selectedCar) setShowTestDrive(true);
 
@@ -1632,7 +1661,7 @@ function DealerStorefront({ dealer, cars, onBack, isPublic }) {
         }]);
       }
     } else {
-      // ── Local smart fallback (no webhook configured) ──
+      // ── Local smart fallback ──
       await new Promise(r => setTimeout(r, 800 + Math.random() * 700));
       
       const q = userMessage.toLowerCase().trim();

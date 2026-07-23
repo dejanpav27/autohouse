@@ -25,11 +25,13 @@ const dealerRoutes = require("./routes/dealers");
 const carRoutes = require("./routes/cars");
 const { router: authRoutes } = require("./routes/auth");
 const bookingRoutes = require("./routes/bookings");
+const chatRoutes = require("./routes/chat");
 
 app.use("/api/dealers", dealerRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
