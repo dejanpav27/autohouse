@@ -633,7 +633,7 @@ function AdminPanel({ onPreview, dealers, setDealers, cars, setCars, currentUser
                 </div>
                 <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 0"}}>
                   <div><div style={{fontWeight:500}}>AI Chat</div><div style={{fontSize:12, color:"#666"}}>Webhook endpoint za chat</div></div>
-                  <input defaultValue="https://n8n.example.com/webhook/chat" style={{...inputStyle, width:340}} />
+                  <input defaultValue="" placeholder="https://your-webhook-url.com/chat" style={{...inputStyle, width:340}} />
                 </div>
               </div>
             </div>
